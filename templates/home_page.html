@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<p>Hello {{ user.username }}!</p>
+<button type="submit" class="btn btn-primary"><a href="{% url 'logout' %}">LOG OUT</a></button>
+
+{% else %}
+<p>You are not logged in!</p>
+<button type="submit" class="btn btn-primary"><a href="{% url 'login' %}">LOG IN</a></button>
+{% endif %}
+{% endblock %}
