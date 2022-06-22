@@ -1,5 +1,7 @@
+from tkinter import CASCADE
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
+
 # from .managers import UserManager
 
 class Account(models.Model):
@@ -7,7 +9,7 @@ class Account(models.Model):
 
 class User(AbstractUser):
     username = models.CharField(max_length=55, unique=True, null=False, blank=False)
-    # objects = UserManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.username
@@ -26,3 +28,23 @@ class UserAccount(models.Model):
 
     def __str__(self):
         return str(self.account_number)
+
+
+class TransferFunds(models.Model):
+    sender = models.ForeignKey(UserAccount, related_name='outcome_transfers', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(UserAccount, related_name='income_transfers', on_delete=models.CASCADE)
+    when = models.DateTimeField()
+    total = models.FloatField()
+    comment = models.CharField(max_length=255)
+
+class Deposit(models.Model):
+    account = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    total = models.FloatField()
+    bank_customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    when = models.DateTimeField()
+
+class Withdraw(models.Model):
+    account = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    total = models.FloatField()
+    bank_customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    when = models.DateTimeField()
