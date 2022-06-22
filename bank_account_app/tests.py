@@ -4,10 +4,18 @@ from django.urls import reverse
 
 class RegisterTest(TestCase):
     def setUp(self):
+        self.register_url = reverse('register')
         self.home_page = reverse('home_page')
+        self.login_url = reverse('home_page')
+        self.user = {
+            'username': 'username',
+            'email': 'qw@qw.qw',
+            'password1': 'SuperSecretPassword666',
+            'password2': 'SuperSecretPassword666'
+        }
         return super().setUp()
 
-    def test_can_view_home_page(self):
-        response = self.client.get(self.home_page)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home_page.html')
+    def test_user_can_register(self):
+        response = self.client.post(self.register_url, self.user, format='text/html')
+        self.assertRedirects(response, reverse('login'))
+
